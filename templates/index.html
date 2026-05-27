@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Naive String Matching Visualizer</title>
+
+<link rel="stylesheet"
+href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Naive String Matching Visualizer</h1>
+
+    <div class="form-box">
+
+        <form method="POST">
+
+            <input
+                type="text"
+                name="text"
+                placeholder="Enter Text"
+                required>
+
+            <input
+                type="text"
+                name="pattern"
+                placeholder="Enter Pattern"
+                required>
+
+            <button type="submit">
+                Start Matching
+            </button>
+
+        </form>
+
+    </div>
+
+    {% if result %}
+
+    <div class="result-box">
+
+        {% if result.found %}
+
+            <h2 class="success">
+                Pattern Found at Index {{ result.index }}
+            </h2>
+
+        {% else %}
+
+            <h2 class="fail">
+                Pattern Not Found
+            </h2>
+
+        {% endif %}
+
+        <div class="stats">
+
+            <div class="card">
+                <h3>Execution Time</h3>
+                <p>{{ result.execution_time }} sec</p>
+            </div>
+
+            <div class="card">
+                <h3>Total Comparisons</h3>
+                <p>{{ result.comparisons }}</p>
+            </div>
+
+            <div class="card">
+                <h3>Time Complexity</h3>
+                <p>O(m × n)</p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="visual-section">
+
+        <h2>Visualization</h2>
+
+        {% for step in result.steps %}
+
+        <div class="step-card">
+
+            <h3>
+                Checking Position : {{ step.position }}
+            </h3>
+
+            <div class="visual-row">
+
+                {% for char in result.text %}
+                    <div class="text-box">
+                        {{ char }}
+                    </div>
+                {% endfor %}
+
+            </div>
+
+            <div class="visual-row shift">
+
+                {% for i in range(step.position) %}
+                    <div class="empty"></div>
+                {% endfor %}
+
+                {% for char in result.pattern_input %}
+
+                    {% if step.match %}
+                        <div class="pattern-box match">
+                            {{ char }}
+                        </div>
+                    {% else %}
+                        <div class="pattern-box mismatch">
+                            {{ char }}
+                        </div>
+                    {% endif %}
+
+                {% endfor %}
+
+            </div>
+
+            <div class="message">
+
+                <p>
+                    Text Part :
+                    <span>{{ step.current }}</span>
+                </p>
+
+                <p>
+                    Pattern :
+                    <span>{{ step.pattern }}</span>
+                </p>
+
+                {% if step.match %}
+
+                    <p class="match-text">
+                        Match Found
+                    </p>
+
+                {% else %}
+
+                    <p class="mismatch-text">
+                        No Match
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+</html>
